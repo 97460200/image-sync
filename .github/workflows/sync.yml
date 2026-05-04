@@ -1,0 +1,22 @@
+name: 一次性同步国外镜像
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 登录阿里云ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ALI_REGISTRY }}
+          username: ${{ secrets.ALI_USER }}
+          password: ${{ secrets.ALI_PASSWORD }}
+
+      
+      - name: 同步 mysql-ndb-operator
+        run: |
+          docker pull container-registry.oracle.com/mysql/community-ndb-operator:9.1.0-1.6.0
+          docker tag container-registry.oracle.com/mysql/community-ndb-operator:9.1.0-1.6.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/mysql-ndb-operator:9.1.0-1.6.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/mysql-ndb-operator:9.1.0-1.6.0
