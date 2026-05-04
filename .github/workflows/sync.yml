@@ -17,8 +17,8 @@ jobs:
         run: |
           docker pull container-registry.oracle.com/mysql/community-ndb-operator:9.1.0-1.6.0
           docker tag container-registry.oracle.com/mysql/community-ndb-operator:9.1.0-1.6.0 \
-          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/mysql-ndb-operator:9.1.0-1.6.0
-          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/mysql-ndb-operator:9.1.0-1.6.0
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/community-ndb-operator:9.1.0-1.6.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/community-ndb-operator:9.1.0-1.6.0
 
       - name: 同步 community-cluster
         run: |
