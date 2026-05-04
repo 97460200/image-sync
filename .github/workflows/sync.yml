@@ -13,10 +13,17 @@ jobs:
           username: ${{ secrets.ALI_USER }}
           password: ${{ secrets.ALI_PASSWORD }}
 
-      
       - name: 同步 mysql-ndb-operator
         run: |
           docker pull container-registry.oracle.com/mysql/community-ndb-operator:9.1.0-1.6.0
           docker tag container-registry.oracle.com/mysql/community-ndb-operator:9.1.0-1.6.0 \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/mysql-ndb-operator:9.1.0-1.6.0
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/mysql-ndb-operator:9.1.0-1.6.0
+
+      - name: 同步 community-cluster
+        run: |
+          docker pull container-registry.oracle.com/mysql/community-cluster:9.1.0
+          docker tag container-registry.oracle.com/mysql/community-cluster:9.1.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/community-cluster:9.1.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/community-cluster:9.1.0
+          
