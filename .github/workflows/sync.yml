@@ -26,4 +26,13 @@ jobs:
           docker tag container-registry.oracle.com/mysql/community-cluster:9.1.0 \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/community-cluster:9.1.0
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/community-cluster:9.1.0
+
+      - name: 同步 netshoot
+        run: |
+          docker pull nicolaka/netshoot:latest
+          docker tag nicolaka/netshoot:latest \
+          ${{ secrets.ALI_REGISTRY }}/liutools/netshoot:latest
+          docker push ${{ secrets.ALI_REGISTRY }}/liutools/netshoot:latest
+
+          
           
