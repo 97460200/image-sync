@@ -41,5 +41,12 @@ jobs:
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq-operator:2.20.1
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq-operator:2.20.1
 
+      - name: 同步 rabbitmq
+        run: |
+          docker pull rabbitmq:3.9-management
+          docker tag rabbitmq:3.9-management \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq:3.9-management
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq:3.9-management
+
           
           
