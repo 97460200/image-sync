@@ -34,5 +34,12 @@ jobs:
           ${{ secrets.ALI_REGISTRY }}/liutools/netshoot:latest
           docker push ${{ secrets.ALI_REGISTRY }}/liutools/netshoot:latest
 
+      - name: 同步 rabbitmq-operator
+        run: |
+          docker pull ghcr.io/rabbitmq/cluster-operator:2.20.1
+          docker tag ghcr.io/rabbitmq/cluster-operator:2.20.1 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq-operator:2.20.1
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq-operator:2.20.1
+
           
           
