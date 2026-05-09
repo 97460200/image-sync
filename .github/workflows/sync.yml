@@ -55,14 +55,14 @@ jobs:
 
       - name: 同步 ZooKeeper
         run: |
-          docker pull bitnami/zookeeper:3.9.3-debian-12-r21
-          docker tag bitnami/zookeeper:3.9.3-debian-12-r21 \
+          docker pull docker.io/bitnami/zookeeper:3.9.3-debian-12-r21
+          docker tag docker.io/bitnami/zookeeper:3.9.3-debian-12-r21 \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/zookeeper:3.9.3-debian-12-r21
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/zookeeper:3.9.3-debian-12-r21
       - name: 同步 kafka
         run: |
-          docker pull bitnami/kafka:4.0.0-debian-12-r10
-          docker tag bitnami/kafka:4.0.0-debian-12-r10 \
+          docker pull docker.io/bitnami/kafka:4.0.0-debian-12-r10
+          docker tag docker.io/bitnami/kafka:4.0.0-debian-12-r10 \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kafka:4.0.0-debian-12-r10
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kafka:4.0.0-debian-12-r10
         
