@@ -14,6 +14,7 @@ jobs:
           password: ${{ secrets.ALI_PASSWORD }}
 
       - name: 同步 mysql-ndb-operator
+        if: false
         run: |
           docker pull container-registry.oracle.com/mysql/community-ndb-operator:9.1.0-1.6.0
           docker tag container-registry.oracle.com/mysql/community-ndb-operator:9.1.0-1.6.0 \
@@ -21,6 +22,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/community-ndb-operator:9.1.0-1.6.0
 
       - name: 同步 community-cluster
+        if: false
         run: |
           docker pull container-registry.oracle.com/mysql/community-cluster:9.1.0
           docker tag container-registry.oracle.com/mysql/community-cluster:9.1.0 \
@@ -28,6 +30,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/community-cluster:9.1.0
 
       - name: 同步 netshoot
+        if: false
         run: |
           docker pull nicolaka/netshoot:latest
           docker tag nicolaka/netshoot:latest \
@@ -35,6 +38,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/liutools/netshoot:latest
 
       - name: 同步 rabbitmq-operator
+        if: false
         run: |
           docker pull ghcr.io/rabbitmq/cluster-operator:2.20.1
           docker tag ghcr.io/rabbitmq/cluster-operator:2.20.1 \
@@ -42,11 +46,26 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq-operator:2.20.1
 
       - name: 同步 rabbitmq
+        if: false
         run: |
           docker pull rabbitmq:3.9-management
           docker tag rabbitmq:3.9-management \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq:3.9-management
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/rabbitmq:3.9-management
+
+      - name: 同步 ZooKeeper
+        run: |
+          docker pull bitnami/zookeeper:3.9.3-debian-12-r21
+          docker tag bitnami/zookeeper:3.9.3-debian-12-r21 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/zookeeper:3.9.3-debian-12-r21
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/zookeeper:3.9.3-debian-12-r21
+      - name: 同步 kafka
+        run: |
+          docker pull bitnami/kafka:4.0.0-debian-12-r10
+          docker tag bitnami/kafka:4.0.0-debian-12-r10 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kafka:4.0.0-debian-12-r10
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kafka:4.0.0-debian-12-r10
+        
 
           
           
