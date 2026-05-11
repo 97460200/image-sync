@@ -152,8 +152,8 @@ jobs:
         run: |
           docker pull quay.io/prometheus-operator/prometheus-config-reloader:v0.85.0
           docker tag quay.io/prometheus-operator/prometheus-config-reloader:v0.85.0 \
-          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-config-reloader:v3.5.0
-          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-config-reloader:v3.5.0
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-config-reloader:v0.85.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-config-reloader:v0.85.0
         
 
           
