@@ -61,11 +61,82 @@ jobs:
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/zookeeper:3.9.3-debian-12-r21
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/zookeeper:3.9.3-debian-12-r21
       - name: 同步 kafka
+        if: false
         run: |
           docker pull docker.io/bitnamilegacy/kafka:3.3.2-debian-11-r11
           docker tag docker.io/bitnamilegacy/kafka:3.3.2-debian-11-r11 \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kafka:3.3.2-debian-11-r11
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kafka:3.3.2-debian-11-r11
+
+      - name: 同步 alertmanager
+        run: |
+          docker pull quay.io/prometheus/alertmanager:v0.28.1
+          docker tag quay.io/prometheus/alertmanager:v0.28.1 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/alertmanager:v0.28.1
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/alertmanager:v0.28.1
+
+      - name: 同步 blackbox-exporter
+        run: |
+          docker pull quay.io/prometheus/blackbox-exporter:v0.27.0
+          docker tag quay.io/prometheus/blackbox-exporter:v0.27.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/blackbox-exporter:v0.27.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/blackbox-exporter:v0.27.0
+
+      - name: 同步 configmap-reload
+        run: |
+          docker pull ghcr.io/jimmidyson/configmap-reload:v0.15.0
+          docker tag ghcr.io/jimmidyson/configmap-reload:v0.15.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/configmap-reload:v0.15.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/configmap-reload:v0.15.0
+
+      - name: 同步 kube-rbac-proxy
+        run: |
+          docker pull quay.io/brancz/kube-rbac-proxy:v0.19.1
+          docker tag quay.io/brancz/kube-rbac-proxy:v0.19.1 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kube-rbac-proxy:v0.19.1
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kube-rbac-proxy:v0.19.1
+
+      - name: 同步 grafana
+        run: |
+          docker pull grafana/grafana:12.1.0
+          docker tag grafana/grafana:12.1.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/grafana:12.1.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/grafana:12.1.0
+
+      - name: 同步 kube-state-metrics
+        run: |
+          docker pull registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.16.0
+          docker tag registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.16.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kube-state-metrics:v2.16.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/kube-state-metrics:v2.16.0
+
+      - name: 同步 node-exporter
+        run: |
+          docker pull quay.io/prometheus/node-exporter:v1.9.1
+          docker tag quay.io/prometheus/node-exporter:v1.9.1 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/node-exporter:v1.9.1
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/node-exporter:v1.9.1
+
+      - name: 同步 prometheus-adapter
+        run: |
+          docker pull registry.k8s.io/prometheus-adapter/prometheus-adapter:v0.12.0
+          docker tag registry.k8s.io/prometheus-adapter/prometheus-adapter:v0.12.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-adapter:v0.12.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-adapter:v0.12.0
+
+      - name: 同步 prometheus-operator
+        run: |
+          docker pull quay.io/prometheus-operator/prometheus-operator:v0.85.0
+          docker tag quay.io/prometheus-operator/prometheus-operator:v0.85.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-operator:v0.85.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-operator:v0.85.0
+
+      - name: 同步 prometheus
+        run: |
+          docker pull quay.io/prometheus/prometheus:v3.5.0
+          docker tag quay.io/prometheus/prometheus:v3.5.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus:v3.5.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus:v3.5.0
         
 
           
