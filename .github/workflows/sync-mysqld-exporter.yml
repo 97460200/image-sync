@@ -11,8 +11,9 @@ jobs:
       TARGET_REPO: liutools/mysqld-exporter
       SOURCE_IMAGE: prom/mysqld-exporter
       SYNCED_TAGS_FILE: synced_tags.txt
-      # 把仓库地址注入到环境变量，shell 可直接读取
       ALI_REGISTRY: ${{ secrets.ALI_REGISTRY }}
+      # 关闭Docker弃用格式告警
+      DOCKER_CONFIG: /dev/null
 
     steps:
       - name: 检出仓库（用于保存已同步标签）
@@ -28,8 +29,9 @@ jobs:
       - name: 安装依赖 jq
         run: sudo apt update && sudo apt install -y jq
 
-      - name: 增量同步镜像（只同步新增tag）
+      - name: 增量同步镜像（只同步新增tag，容错版）
         run: |
+          set +e  # 开启容错，单个tag失败不退出
           touch ${SYNCED_TAGS_FILE}
           TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${SOURCE_IMAGE}/tags?page_size=100" | jq -r '.results[].name')
           for TAG in $TAGS; do
@@ -38,7 +40,12 @@ jobs:
               docker pull ${SOURCE_IMAGE}:$TAG
               docker tag ${SOURCE_IMAGE}:$TAG ${ALI_REGISTRY}/${TARGET_REPO}:$TAG
               docker push ${ALI_REGISTRY}/${TARGET_REPO}:$TAG
-              echo "$TAG" >> ${SYNCED_TAGS_FILE}
+              if [ $? -eq 0 ]; then
+                echo "$TAG" >> ${SYNCED_TAGS_FILE}
+                echo "✅ $TAG 同步成功"
+              else
+                echo "⚠️ $TAG 同步失败，跳过"
+              fi
             else
               echo "✅ 标签已存在，跳过：$TAG"
             fi
