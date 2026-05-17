@@ -1,4 +1,4 @@
-name: 定时同步 prom/mysqld-exporter 镜像（增量同步）
+name: 定时同步 prom/mysqld-exporter 镜像（增量同步·免提交版）
 on:
   schedule:
     - cron: '0 2 * * *'
@@ -10,13 +10,9 @@ jobs:
     env:
       TARGET_REPO: liutools/mysqld-exporter
       SOURCE_IMAGE: prom/mysqld-exporter
-      SYNCED_TAGS_FILE: synced_tags.txt
       ALI_REGISTRY: ${{ secrets.ALI_REGISTRY }}
 
     steps:
-      - name: 检出仓库（用于保存已同步标签）
-        uses: actions/checkout@v4
-
       - name: 登录阿里云ACR
         uses: docker/login-action@v3
         with:
@@ -27,20 +23,21 @@ jobs:
       - name: 安装依赖 jq
         run: sudo apt update && sudo apt install -y jq
 
-      - name: 增量同步镜像（容错+屏蔽格式警告）
+      - name: 增量同步镜像（直接对比目标仓库标签，免文件提交）
         run: |
           set +e
-          touch ${SYNCED_TAGS_FILE}
-          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${SOURCE_IMAGE}/tags?page_size=100" | jq -r '.results[].name')
-          for TAG in $TAGS; do
-            if ! grep -qx "$TAG" ${SYNCED_TAGS_FILE}; then
+          # 获取源仓库所有标签
+          SOURCE_TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${SOURCE_IMAGE}/tags?page_size=100" | jq -r '.results[].name')
+          # 获取目标阿里云仓库已存在标签
+          TARGET_TAGS=$(curl -s "https://${ALI_REGISTRY}/v2/${TARGET_REPO}/tags/list" -u "${{ secrets.ALI_USER }}:${{ secrets.ALI_PASSWORD }}" | jq -r '.tags[]')
+          
+          for TAG in $SOURCE_TAGS; do
+            if ! echo "$TARGET_TAGS" | grep -qx "$TAG"; then
               echo "🚀 同步新标签：$TAG"
-              # 局部屏蔽Docker弃用格式警告
               DOCKER_ENGINE_OPTIONS="--log-level=error" docker pull ${SOURCE_IMAGE}:$TAG
               docker tag ${SOURCE_IMAGE}:$TAG ${ALI_REGISTRY}/${TARGET_REPO}:$TAG
               DOCKER_ENGINE_OPTIONS="--log-level=error" docker push ${ALI_REGISTRY}/${TARGET_REPO}:$TAG
               if [ $? -eq 0 ]; then
-                echo "$TAG" >> ${SYNCED_TAGS_FILE}
                 echo "✅ $TAG 同步成功"
               else
                 echo "⚠️ $TAG 同步失败，跳过"
@@ -49,11 +46,3 @@ jobs:
               echo "✅ 标签已存在，跳过：$TAG"
             fi
           done
-
-      - name: 提交已同步标签记录
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: "Update synced tags [skip ci]"
-          add: ${{ env.SYNCED_TAGS_FILE }}
-          committer_name: GitHub Actions
-          committer_email: actions@github.com
