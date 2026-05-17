@@ -1,43 +1,60 @@
-name: 定时同步 prom/mysqld-exporter 镜像
-
-# 触发规则：每天凌晨2点执行，可自定义 cron
+name: 定时同步 prom/mysqld-exporter 镜像（增量同步）
 on:
   schedule:
     - cron: '0 2 * * *'
-  # 支持手动触发
   workflow_dispatch:
 
 jobs:
   sync-image:
     runs-on: ubuntu-latest
+    env:
+      TARGET_REGISTRY: crpi-eiv90cjbtmuyblxf.cn-hangzhou.personal.cr.aliyuncs.com
+      TARGET_REPO: liutools/mysqld-exporter
+      SOURCE_IMAGE: prom/mysqld-exporter
+      SYNCED_TAGS_FILE: synced_tags.txt
+
     steps:
-      - name: 安装依赖 & 登录 Docker
-        env:
-          # ========== 配置你的镜像仓库信息 ==========
-          # 目标镜像仓库地址，例如阿里云：registry.cn-beijing.aliyuncs.com
-          TARGET_REGISTRY: crpi-eiv90cjbtmuyblxf.cn-hangzhou.personal.cr.aliyuncs.com
-          # 目标镜像仓库命名空间/仓库名
-          TARGET_REPO: liutools/mysqld-exporter
-          # 原镜像名称
-          SOURCE_IMAGE: prom/mysqld-exporter
-          # 仓库密钥，在GitHub仓库 Secrets 中配置
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: 检出仓库（用于保存已同步标签）
+        uses: actions/checkout@v4
+
+      - name: 登录阿里云镜像仓库
         run: |
-          # 登录目标镜像仓库
-          docker login $TARGET_REGISTRY -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          
-          # 安装 jq 解析Tag
-          sudo apt update && sudo apt install -y jq
-          
-          # 获取原镜像所有Tag
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login $TARGET_REGISTRY \
+            -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: 安装依赖 jq
+        run: sudo apt update && sudo apt install -y jq
+
+      - name: 增量同步镜像（只同步新增tag）
+        run: |
+          # 1. 创建已同步标签文件（不存在则创建）
+          touch $SYNCED_TAGS_FILE
+
+          # 2. 获取源仓库所有标签
           TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${SOURCE_IMAGE}/tags?page_size=100" | jq -r '.results[].name')
-          
-          # 循环同步每个Tag
+
+          # 3. 循环同步：只同步未同步过的标签
           for TAG in $TAGS; do
-            echo "开始同步标签: $TAG"
-            docker pull $SOURCE_IMAGE:$TAG
-            docker tag $SOURCE_IMAGE:$TAG $TARGET_REGISTRY/$TARGET_REPO:$TAG
-            docker push $TARGET_REGISTRY/$TARGET_REPO:$TAG
-            echo "标签 $TAG 同步完成"
+            if ! grep -qx "$TAG" $SYNCED_TAGS_FILE; then
+              echo "====================================="
+              echo "🚀 同步新标签：$TAG"
+              echo "====================================="
+              
+              docker pull $SOURCE_IMAGE:$TAG
+              docker tag $SOURCE_IMAGE:$TAG $TARGET_REGISTRY/$TARGET_REPO:$TAG
+              docker push $TARGET_REGISTRY/$TARGET_REPO:$TAG
+
+              # 标记为已同步
+              echo "$TAG" >> $SYNCED_TAGS_FILE
+            else
+              echo "✅ 标签已存在，跳过：$TAG"
+            fi
           done
+
+      - name: 提交已同步标签记录
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Update synced tags [skip ci]"
+          add: ${{ env.SYNCED_TAGS_FILE }}
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
