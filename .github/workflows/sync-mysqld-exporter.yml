@@ -17,9 +17,8 @@ jobs:
       - name: 检出仓库（用于保存已同步标签）
         uses: actions/checkout@v4
 
-      - name: 登录阿里云镜像仓库（稳定版）
-        run: |
-          docker login ${TARGET_REGISTRY} -u ${{ secrets.DOCKER_USERNAME }} --password-stdin <<< ${{ secrets.DOCKER_PASSWORD }}
+      - name: 登录阿里云镜像仓库（官方标准写法）
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${TARGET_REGISTRY} -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: 安装依赖 jq
         run: sudo apt update && sudo apt install -y jq
@@ -27,9 +26,7 @@ jobs:
       - name: 增量同步镜像（只同步新增tag）
         run: |
           touch ${SYNCED_TAGS_FILE}
-          # 获取源仓库所有标签
           TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${SOURCE_IMAGE}/tags?page_size=100" | jq -r '.results[].name')
-          # 循环增量同步
           for TAG in $TAGS; do
             if ! grep -qx "$TAG" ${SYNCED_TAGS_FILE}; then
               echo "🚀 同步新标签：$TAG"
