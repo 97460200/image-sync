@@ -17,35 +17,26 @@ jobs:
       - name: 检出仓库（用于保存已同步标签）
         uses: actions/checkout@v4
 
-      - name: 登录阿里云镜像仓库
+      - name: 登录阿里云镜像仓库（稳定版）
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login $TARGET_REGISTRY \
-            -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker login ${TARGET_REGISTRY} -u ${{ secrets.DOCKER_USERNAME }} --password-stdin <<< ${{ secrets.DOCKER_PASSWORD }}
 
       - name: 安装依赖 jq
         run: sudo apt update && sudo apt install -y jq
 
       - name: 增量同步镜像（只同步新增tag）
         run: |
-          # 1. 创建已同步标签文件（不存在则创建）
-          touch $SYNCED_TAGS_FILE
-
-          # 2. 获取源仓库所有标签
+          touch ${SYNCED_TAGS_FILE}
+          # 获取源仓库所有标签
           TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${SOURCE_IMAGE}/tags?page_size=100" | jq -r '.results[].name')
-
-          # 3. 循环同步：只同步未同步过的标签
+          # 循环增量同步
           for TAG in $TAGS; do
-            if ! grep -qx "$TAG" $SYNCED_TAGS_FILE; then
-              echo "====================================="
+            if ! grep -qx "$TAG" ${SYNCED_TAGS_FILE}; then
               echo "🚀 同步新标签：$TAG"
-              echo "====================================="
-              
-              docker pull $SOURCE_IMAGE:$TAG
-              docker tag $SOURCE_IMAGE:$TAG $TARGET_REGISTRY/$TARGET_REPO:$TAG
-              docker push $TARGET_REGISTRY/$TARGET_REPO:$TAG
-
-              # 标记为已同步
-              echo "$TAG" >> $SYNCED_TAGS_FILE
+              docker pull ${SOURCE_IMAGE}:$TAG
+              docker tag ${SOURCE_IMAGE}:$TAG ${TARGET_REGISTRY}/${TARGET_REPO}:$TAG
+              docker push ${TARGET_REGISTRY}/${TARGET_REPO}:$TAG
+              echo "$TAG" >> ${SYNCED_TAGS_FILE}
             else
               echo "✅ 标签已存在，跳过：$TAG"
             fi
