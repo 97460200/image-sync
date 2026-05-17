@@ -12,8 +12,6 @@ jobs:
       SOURCE_IMAGE: prom/mysqld-exporter
       SYNCED_TAGS_FILE: synced_tags.txt
       ALI_REGISTRY: ${{ secrets.ALI_REGISTRY }}
-      # 关闭Docker弃用格式告警
-      DOCKER_CONFIG: /dev/null
 
     steps:
       - name: 检出仓库（用于保存已同步标签）
@@ -29,17 +27,18 @@ jobs:
       - name: 安装依赖 jq
         run: sudo apt update && sudo apt install -y jq
 
-      - name: 增量同步镜像（只同步新增tag，容错版）
+      - name: 增量同步镜像（容错+屏蔽格式警告）
         run: |
-          set +e  # 开启容错，单个tag失败不退出
+          set +e
           touch ${SYNCED_TAGS_FILE}
           TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${SOURCE_IMAGE}/tags?page_size=100" | jq -r '.results[].name')
           for TAG in $TAGS; do
             if ! grep -qx "$TAG" ${SYNCED_TAGS_FILE}; then
               echo "🚀 同步新标签：$TAG"
-              docker pull ${SOURCE_IMAGE}:$TAG
+              # 局部屏蔽Docker弃用格式警告
+              DOCKER_ENGINE_OPTIONS="--log-level=error" docker pull ${SOURCE_IMAGE}:$TAG
               docker tag ${SOURCE_IMAGE}:$TAG ${ALI_REGISTRY}/${TARGET_REPO}:$TAG
-              docker push ${ALI_REGISTRY}/${TARGET_REPO}:$TAG
+              DOCKER_ENGINE_OPTIONS="--log-level=error" docker push ${ALI_REGISTRY}/${TARGET_REPO}:$TAG
               if [ $? -eq 0 ]; then
                 echo "$TAG" >> ${SYNCED_TAGS_FILE}
                 echo "✅ $TAG 同步成功"
