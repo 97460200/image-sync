@@ -11,12 +11,13 @@ jobs:
       TARGET_REPO: liutools/mysqld-exporter
       SOURCE_IMAGE: prom/mysqld-exporter
       SYNCED_TAGS_FILE: synced_tags.txt
+      # 把仓库地址注入到环境变量，shell 可直接读取
+      ALI_REGISTRY: ${{ secrets.ALI_REGISTRY }}
 
     steps:
       - name: 检出仓库（用于保存已同步标签）
         uses: actions/checkout@v4
 
-      # 完全沿用你当前的阿里云ACR登录配置
       - name: 登录阿里云ACR
         uses: docker/login-action@v3
         with:
