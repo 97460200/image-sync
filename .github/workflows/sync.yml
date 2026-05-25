@@ -182,7 +182,7 @@ jobs:
 
       - name: 同步 skywalking-satellite
         run: |
-          docker pull skywalking.docker.scarf.sh/apache/skywalking-satellite:latest
+          docker pull skywalking.docker.scarf.sh/apache/skywalking-satellite:null
           docker tag skywalking.docker.scarf.sh/apache/skywalking-satellite:latest \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-satellite:latest
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-satellite:latest
