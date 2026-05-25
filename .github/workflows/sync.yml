@@ -181,11 +181,26 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:latest
 
       - name: 同步 skywalking-satellite
+        if: false
         run: |
           docker pull skywalking.docker.scarf.sh/apache/skywalking-satellite:v1.3.0
           docker tag skywalking.docker.scarf.sh/apache/skywalking-satellite:v1.3.0 \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-satellite:latest
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-satellite:latest
+
+      - name: 同步 elasticsearch
+        run: |
+          docker pull docker.elastic.co/elasticsearch/elasticsearch:6.8.6
+          docker tag docker.elastic.co/elasticsearch/elasticsearch:6.8.6 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/elasticsearch:6.8.6
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/elasticsearch:6.8.6
+
+      - name: 同步 busybox
+        run: |
+          docker pull busybox:1.30
+          docker tag busybox:1.30 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.30
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.30
 
           
           
