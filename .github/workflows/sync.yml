@@ -165,20 +165,20 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/redis_exporter:v1.83.0
           
       - name: 同步 skywalking-oap-server
-        if: false
+        
         run: |
-          docker pull skywalking.docker.scarf.sh/apache/skywalking-oap-server:latest
-          docker tag skywalking.docker.scarf.sh/apache/skywalking-oap-server:latest \
-          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-oap-server:latest
-          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-oap-server:latest
+          docker pull skywalking.docker.scarf.sh/apache/skywalking-oap-server:10.2.0
+          docker tag skywalking.docker.scarf.sh/apache/skywalking-oap-server:10.2.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-oap-server:10.2.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-oap-server:10.2.0
 
       - name: 同步 skywalking-ui
-        if: false
+        
         run: |
-          docker pull skywalking.docker.scarf.sh/apache/skywalking-ui:latest
-          docker tag skywalking.docker.scarf.sh/apache/skywalking-ui:latest \
-          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:latest
-          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:latest
+          docker pull skywalking.docker.scarf.sh/apache/skywalking-ui:10.2.0
+          docker tag skywalking.docker.scarf.sh/apache/skywalking-ui:10.2.0 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:10.2.0
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:10.2.0
 
       - name: 同步 skywalking-satellite
         if: false
@@ -189,6 +189,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-satellite:latest
 
       - name: 同步 elasticsearch
+        if: false
         run: |
           docker pull docker.elastic.co/elasticsearch/elasticsearch:6.8.6
           docker tag docker.elastic.co/elasticsearch/elasticsearch:6.8.6 \
@@ -196,6 +197,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/elasticsearch:6.8.6
 
       - name: 同步 busybox
+        if: false
         run: |
           docker pull busybox:1.30
           docker tag busybox:1.30 \
