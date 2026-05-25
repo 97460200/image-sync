@@ -165,6 +165,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/redis_exporter:v1.83.0
           
       - name: 同步 skywalking-oap-server
+        if: false
         run: |
           docker pull skywalking.docker.scarf.sh/apache/skywalking-oap-server:latest
           docker tag skywalking.docker.scarf.sh/apache/skywalking-oap-server:latest \
@@ -172,11 +173,19 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-oap-server:latest
 
       - name: 同步 skywalking-ui
+        if: false
         run: |
           docker pull skywalking.docker.scarf.sh/apache/skywalking-ui:latest
           docker tag skywalking.docker.scarf.sh/apache/skywalking-ui:latest \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:latest
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:latest
+
+      - name: 同步 skywalking-satellite
+        run: |
+          docker pull skywalking.docker.scarf.sh/apache/skywalking-satellite:latest
+          docker tag skywalking.docker.scarf.sh/apache/skywalking-satellite:latest \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-satellite:latest
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-satellite:latest
 
           
           
