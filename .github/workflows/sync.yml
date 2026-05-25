@@ -157,13 +157,26 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/prometheus-config-reloader:v0.85.0
 
       - name: 同步 prometheus-config-reloader
+        if: false
         run: |
           docker pull oliver006/redis_exporter:v1.83.0
           docker tag oliver006/redis_exporter:v1.83.0 \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/redis_exporter:v1.83.0
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/redis_exporter:v1.83.0
           
-        
+      - name: 同步 skywalking-oap-server
+        run: |
+          docker pull skywalking.docker.scarf.sh/apache/skywalking-oap-server:latest
+          docker tag skywalking.docker.scarf.sh/apache/skywalking-oap-server:latest \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-oap-server:latest
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-oap-server:latest
+
+      - name: 同步 skywalking-ui
+        run: |
+          docker pull skywalking.docker.scarf.sh/apache/skywalking-ui:latest
+          docker tag skywalking.docker.scarf.sh/apache/skywalking-ui:latest \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:latest
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-ui:latest
 
           
           
