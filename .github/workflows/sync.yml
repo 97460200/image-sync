@@ -205,7 +205,6 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.30
 
       - name: 同步 skywalking-java-agent
-      
         run: |
           docker pull apache/skywalking-java-agent:8.16.0-java8
           docker tag apache/skywalking-java-agent:8.16.0-java8 \
