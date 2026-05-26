@@ -165,6 +165,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/redis_exporter:v1.83.0
           
       - name: 同步 skywalking-oap-server
+        if: false
         run: |
           docker pull skywalking.docker.scarf.sh/apache/skywalking-oap-server:10.4.0
           docker tag skywalking.docker.scarf.sh/apache/skywalking-oap-server:10.4.0 \
@@ -172,6 +173,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-oap-server:10.4.0
 
       - name: 同步 skywalking-ui
+        if: false
         run: |
           docker pull skywalking.docker.scarf.sh/apache/skywalking-ui:10.4.0
           docker tag skywalking.docker.scarf.sh/apache/skywalking-ui:10.4.0 \
@@ -201,6 +203,25 @@ jobs:
           docker tag busybox:1.30 \
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.30
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.30
+
+      - name: 同步 skywalking-java-agent
+      
+        run: |
+          docker pull apache/skywalking-java-agent:9.6.0-java8
+          docker tag apache/skywalking-java-agent:9.6.0-java8 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-java-agent:9.6.0-java8
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-java-agent:9.6.0-java8
+
+      
+      - name: 同步 skywalking-go-agent
+   
+        run: |
+          docker pull apache/skywalking-go:0.5.0-go1.23
+          docker tag apache/skywalking-go:0.5.0-go1.23 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-go:0.5.0-go1.23
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-go:0.5.0-go1.23
+
+
 
           
           
