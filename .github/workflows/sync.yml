@@ -207,14 +207,14 @@ jobs:
       - name: 同步 skywalking-java-agent
       
         run: |
-          docker pull apache/skywalking-java-agent:9.6.0-java8
-          docker tag apache/skywalking-java-agent:9.6.0-java8 \
-          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-java-agent:9.6.0-java8
-          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-java-agent:9.6.0-java8
+          docker pull apache/skywalking-java-agent:8.16.0-java8
+          docker tag apache/skywalking-java-agent:8.16.0-java8 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-java-agent:8.16.0-java8
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-java-agent:8.16.0-java8
 
       
       - name: 同步 skywalking-go-agent
-   
+        if: false
         run: |
           docker pull apache/skywalking-go:0.5.0-go1.23
           docker tag apache/skywalking-go:0.5.0-go1.23 \
