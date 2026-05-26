@@ -197,14 +197,15 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/elasticsearch:6.8.6
 
       - name: 同步 busybox
-        if: false
+        
         run: |
-          docker pull busybox:1.30
-          docker tag busybox:1.30 \
-          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.30
-          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.30
+          docker pull busybox:1.36
+          docker tag busybox:1.36 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.36
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/busybox:1.36
 
       - name: 同步 skywalking-java-agent
+        if: false
         run: |
           docker pull apache/skywalking-java-agent:8.16.0-java8
           docker tag apache/skywalking-java-agent:8.16.0-java8 \
