@@ -221,6 +221,44 @@ jobs:
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-go:0.5.0-go1.23
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-go:0.5.0-go1.23
 
+      - name: 同步 istio bookinfo 镜像
+     
+        run: |
+           # details-v1
+           docker pull registry.istio.io/release/examples-bookinfo-details-v1:1.20.3
+           docker tag registry.istio.io/release/examples-bookinfo-details-v1:1.20.3 \
+           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-details-v1:1.20.3
+           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-details-v1:1.20.3
+
+           # ratings-v1
+           docker pull registry.istio.io/release/examples-bookinfo-ratings-v1:1.20.3
+           docker tag registry.istio.io/release/examples-bookinfo-ratings-v1:1.20.3 \
+           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-ratings-v1:1.20.3
+           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-ratings-v1:1.20.3
+
+           # reviews-v1
+           docker pull registry.istio.io/release/examples-bookinfo-reviews-v1:1.20.3
+           docker tag registry.istio.io/release/examples-bookinfo-reviews-v1:1.20.3 \
+           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-reviews-v1:1.20.3
+           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-reviews-v1:1.20.3
+
+           # reviews-v2
+           docker pull registry.istio.io/release/examples-bookinfo-reviews-v2:1.20.3
+           docker tag registry.istio.io/release/examples-bookinfo-reviews-v2:1.20.3 \
+           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-reviews-v2:1.20.3
+           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-reviews-v2:1.20.3
+
+           # reviews-v3
+           docker pull registry.istio.io/release/examples-bookinfo-reviews-v3:1.20.3
+           docker tag registry.istio.io/release/examples-bookinfo-reviews-v3:1.20.3 \
+           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-reviews-v3:1.20.3
+           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-reviews-v3:1.20.3
+
+           # productpage-v1
+           docker pull registry.istio.io/release/examples-bookinfo-productpage-v1:1.20.3
+           docker tag registry.istio.io/release/examples-bookinfo-productpage-v1:1.20.3 \
+           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-productpage-v1:1.20.3
+           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-productpage-v1:1.20.3
 
 
           
