@@ -221,8 +221,16 @@ jobs:
           ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-go:0.5.0-go1.23
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-go:0.5.0-go1.23
 
+      - name: 同步 jenkins
+        
+        run: |
+          docker pull jenkins/jenkins:latest
+          docker tag jenkins/jenkins:latest \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/jenkins:latest
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/jenkins:latest
+
       - name: 同步 istio bookinfo 镜像
-     
+        if: false
         run: |
            # details-v1
            docker pull registry.istio.io/release/examples-bookinfo-details-v1:1.20.3
@@ -259,6 +267,8 @@ jobs:
            docker tag registry.istio.io/release/examples-bookinfo-productpage-v1:1.20.3 \
            ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-productpage-v1:1.20.3
            docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-productpage-v1:1.20.3
+
+        
 
 
           
