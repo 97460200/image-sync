@@ -197,7 +197,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/elasticsearch:6.8.6
 
       - name: 同步 busybox
-        
+        if: false
         run: |
           docker pull busybox:1.36
           docker tag busybox:1.36 \
@@ -222,7 +222,7 @@ jobs:
           docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/skywalking-go:0.5.0-go1.23
 
       - name: 同步 jenkins
-        
+        if: false
         run: |
           docker pull jenkins/jenkins:latest
           docker tag jenkins/jenkins:latest \
@@ -267,6 +267,14 @@ jobs:
            docker tag registry.istio.io/release/examples-bookinfo-productpage-v1:1.20.3 \
            ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-productpage-v1:1.20.3
            docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/examples-bookinfo-productpage-v1:1.20.3
+
+      - name: 同步 jenkins/inbound-agent
+        
+        run: |
+          docker pull jenkins/inbound-agent:latest-alpine-jdk21
+          docker tag jenkins/inbound-agent:latest-alpine-jdk21 \
+          ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/inbound-agent:latest-alpine-jdk21
+          docker push ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_NAMESPACE }}/inbound-agent:latest-alpine-jdk21
 
         
 
